@@ -2,19 +2,33 @@
     include_once 'includes/Comment.php';
     include_once 'includes/dbh.php';
 
-    $commentGroups = [];
-    $sql = "select * from sweetwater_test;";
-    $result = mysqli_query($conn, $sql);
-    while ($row = $result->fetch_assoc()) {
-        $comment = new Comment($row['orderid'], $row['comments'], $row['shipdate_expected']);
-        if(!array_key_exists($comment->commentsType, $commentGroups)) {
-            $commentGroups[$comment->commentsType] = [];
+    function updateShipdate($row, $conn) {
+        $comment = str_replace(' ', '', strtolower($row['comments']));
+        $date = substr($comment, strpos($comment, "expectedshipdate:"));
+        if(stripos($date, "expectedshipdate:") !== false) {
+            $comments = str_replace("'", "''", $row['comments']);
+            $pos = strpos($date, ':');
+            $formatThis = preg_replace("~\D~", "", (substr($date, $pos, $pos + 8)));
+            $month = substr($formatThis, 0, 2);
+            $day = substr($formatThis, 2, 2);
+            $year = '20'.substr($formatThis, 4, 4);
+            $date = DateTime::createFromFormat('Y-m-d', $year.'-'.$month.'-'.$day)->format('Y-m-d');
+            $sql = "insert into sweetwater_test (orderid, comments, shipdate_expected) values(".$row['orderid'].",'".$comments."','".$date."')
+                    on duplicate key update orderid=".$row['orderid'].", comments='".$comments."', shipdate_expected='".$date."';";
+            mysqli_query($conn, $sql);
+            $getUpdatedRow = "select * from sweetwater_test where orderid = ".$row['orderid'].";";
+            $result = mysqli_query($conn, $getUpdatedRow);
+            $row = $result->fetch_row();
+            return $row[0];
         }
-        array_push($commentGroups[$comment->commentsType], $comment);
+        return $row;
     }
 
     function printTable($comments) {
-        $tableStr = '<table>';
+        $tableStr = '<table class="table">
+            <th scope="col">Order Id</th>
+            <th scope="col">Comments</th>
+            <th scope="col">Shipment Date</th>';
         foreach($comments as $comment) {
             $rowStr = ' 
             <tr>
@@ -26,6 +40,21 @@
         }
         return $tableStr.'</table>';
     } 
+
+    $commentGroups = [];
+    $sql = "select * from sweetwater_test;";
+    $result = mysqli_query($conn, $sql);
+    while ($row = $result->fetch_assoc()) {
+        if($row['shipdate_expected'] == '0000-00-00 00:00:00') {
+            $row = updateShipdate($row, $conn);
+        }
+        // $echo
+        $comment = new Comment($row['orderid'], $row['comments'], $row['shipdate_expected']);
+        if(!array_key_exists($comment->commentsType, $commentGroups)) {
+            $commentGroups[$comment->commentsType] = [];
+        }
+        array_push($commentGroups[$comment->commentsType], $comment);
+    }
 ?>
 
 <!DOCTYPE html>
