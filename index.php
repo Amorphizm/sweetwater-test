@@ -18,8 +18,8 @@
             mysqli_query($conn, $sql);
             $getUpdatedRow = "select * from sweetwater_test where orderid = ".$row['orderid'].";";
             $result = mysqli_query($conn, $getUpdatedRow);
-            $row = $result->fetch_row();
-            return $row[0];
+            $row = $result->fetch_assoc();
+            return $row;
         }
         return $row;
     }
@@ -48,7 +48,6 @@
         if($row['shipdate_expected'] == '0000-00-00 00:00:00') {
             $row = updateShipdate($row, $conn);
         }
-        // $echo
         $comment = new Comment($row['orderid'], $row['comments'], $row['shipdate_expected']);
         if(!array_key_exists($comment->commentsType, $commentGroups)) {
             $commentGroups[$comment->commentsType] = [];
