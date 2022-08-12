@@ -20,7 +20,10 @@
             $sql = "select * from sweetwater_test;";
             $result = mysqli_query($conn, $sql);
             while ($row = $result->fetch_assoc()) {
-                array_push($comments, new Comment($row['orderid'], $row['comments'], $row['shipdate_expected']));
+                $comment = new Comment($row['orderid'], $row['comments'], $row['shipdate_expected']);
+                // $comment->commentsType;
+                // echo $comment->orderId .' - '. $comment->comments .' - '. $comment->shipdate_expected.'<br>';
+                array_push($comments, $comment);
             }
             echo var_dump($comments);
         ?>
