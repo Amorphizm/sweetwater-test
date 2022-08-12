@@ -13,13 +13,11 @@
             $day = substr($formatThis, 2, 2);
             $year = '20'.substr($formatThis, 4, 4);
             $date = DateTime::createFromFormat('Y-m-d', $year.'-'.$month.'-'.$day)->format('Y-m-d');
-            $sql = "insert into sweetwater_test (orderid, comments, shipdate_expected) values(".$row['orderid'].",'".$comments."','".$date."')
-                    on duplicate key update orderid=".$row['orderid'].", comments='".$comments."', shipdate_expected='".$date."';";
+            $sql = "update sweetwater_test set shipdate_expected = '".$date."' where orderid = ".$row['orderid'].";";
             mysqli_query($conn, $sql);
             $getUpdatedRow = "select * from sweetwater_test where orderid = ".$row['orderid'].";";
             $result = mysqli_query($conn, $getUpdatedRow);
-            $row = $result->fetch_assoc();
-            return $row;
+            return $result->fetch_assoc();
         }
         return $row;
     }
