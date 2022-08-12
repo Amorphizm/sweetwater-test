@@ -1,5 +1,4 @@
 <?php
-include_once 'dbh.php';
 
 class Comment {
     public $orderId;
@@ -7,10 +6,10 @@ class Comment {
     public $shipdate_expected;
     public $commentsType;
     public $commentsKeyWords = array(
-        "candy" => ['candy'],
-        "call" => ['call'],
-        "refer" => ['referred'],
-        "signature" => ['signature'],
+        "candy" => ['candy', 'smarties', 'taffy'],
+        "call" => [' call'],
+        "refer" => ['referred', 'referral'],
+        "signature" => ['signature', 'sign'],
     );
     
     function __construct($orderId, $comments, $shipdate_expected)  {
@@ -23,7 +22,7 @@ class Comment {
     public function parseCommentsType() {
         foreach($this->commentsKeyWords as $keyWordCat => $words) {
             foreach($words as $word) {
-                if(strpos($this->comments, $word) !== false) {
+                if(stripos($this->comments, $word) !== false) {
                     return $keyWordCat;
                 }
             }
