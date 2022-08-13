@@ -7,9 +7,9 @@ class Comment {
     public $commentsType;
     public $commentsKeyWords = array(
         "candy" => ['candy', 'smarties', 'taffy'],
-        "call" => [' call'],
+        "call" => ['call', 'phone'],
         "refer" => ['referred', 'referral'],
-        "signature" => ['signature', 'sign'],
+        "signature" => ['sign'],
     );
     
     function __construct($orderId, $comments, $shipdate_expected)  {
@@ -22,7 +22,7 @@ class Comment {
     public function parseCommentsType() {
         foreach($this->commentsKeyWords as $keyWordCat => $words) {
             foreach($words as $word) {
-                if(stripos($this->comments, $word) !== false) {
+                if(str_contains(strtolower($this->comments), $word)) {
                     return $keyWordCat;
                 }
             }
