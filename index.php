@@ -23,7 +23,7 @@
     }
 
     function printTable($comments) {
-        $tableStr = '<table class="table">
+        $tableStr = '<table class="table table-dark">
             <th scope="col">Order Id</th>
             <th scope="col">Comments</th>
             <th scope="col">Shipment Date</th>';
@@ -64,43 +64,40 @@
             rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     </head>
     <body>
-        <div class="">
-            <h1>Comments</h1>
-        </div>
-
-        <div>
-            <h3>Candy Related Comments</h3>
-            <?php
-                echo printTable($commentGroups['candy']);
-            ?>
-        </div>
-
-        <div>
-            <h3>Call Related Comments</h3>
-            <?php
-                echo printTable($commentGroups['call']);
-            ?>
-        </div>
-
-        <div>
-            <h3>Referred Related Comments</h3>
-            <?php
-                echo printTable($commentGroups['refer']);
-            ?>
-        </div>
-
-        <div>
-            <h3>Signature Related Comments</h3>
-            <?php
-                echo printTable($commentGroups['signature']);
-            ?>
-        </div>
-
-        <div>
-            <h3>Misc. Related Comments</h3>
-            <?php
-                echo printTable($commentGroups['other']);
-            ?>
+        <div class="container">
+            <div class="">
+                <h1>Comments</h1>
+            </div>
+            <div>
+                <h3>Candy Related Comments</h3>
+                <?php
+                    echo printTable($commentGroups['candy']);
+                ?>
+            </div>
+            <div>
+                <h3>Call Related Comments</h3>
+                <?php
+                    echo printTable($commentGroups['call']);
+                ?>
+            </div>
+            <div>
+                <h3>Referred Related Comments</h3>
+                <?php
+                    echo printTable($commentGroups['refer']);
+                ?>
+            </div>
+            <div>
+                <h3>Signature Related Comments</h3>
+                <?php
+                    echo printTable($commentGroups['signature']);
+                ?>
+            </div>
+            <div>
+                <h3>Misc. Related Comments</h3>
+                <?php
+                    echo printTable($commentGroups['other']);
+                ?>
+            </div>
         </div>
     </body>
 </html>
